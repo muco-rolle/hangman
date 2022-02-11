@@ -25,7 +25,7 @@ defmodule Hangman.Impl.Game do
     |> new_game()
   end
 
-  @spec new_game(binary) :: t()
+  @spec new_game(binary) :: t
   def new_game(word) do
     %Hangman.Impl.Game{
       letters: word |> String.codepoints()
