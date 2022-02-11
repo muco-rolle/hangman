@@ -3,15 +3,13 @@ defmodule Hangman do
   Documentation for `Hangman`.
   """
 
-  alias Hangman.Impl.Game
+  alias Hangman.{Impl.Game, Types}
 
   @opaque game :: Game.t()
 
-  def new_game() do
-    # pass
-  end
+  @spec new_game :: game
+  defdelegate new_game, to: Game
 
-  def make_move() do
-    # pass
-  end
+  @spec make_move(game, binary) :: {game, Types.tally()}
+  defdelegate make_move(game, guess), to: Game
 end

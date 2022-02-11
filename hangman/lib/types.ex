@@ -1,4 +1,4 @@
-defmodule Hangman.Impl.Types do
+defmodule Hangman.Types do
   @moduledoc """
   Hangman Types
   """

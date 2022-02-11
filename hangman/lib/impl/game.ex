@@ -3,7 +3,7 @@ defmodule Hangman.Impl.Game do
   Game module documentation
   """
 
-  alias Hangman.Impl.Types
+  alias Hangman.{Types, Impl.Utils}
 
   @type t :: %Hangman.Impl.Game{
           turns_left: integer,
@@ -30,5 +30,26 @@ defmodule Hangman.Impl.Game do
     %Hangman.Impl.Game{
       letters: word |> String.codepoints()
     }
+  end
+
+  @spec make_move(t, binary) :: {t, Types.tally()}
+  def make_move(game = %{game_state: state}, _guess) when state in [:won, :lost] do
+    game |> Utils.return_with_tally()
+  end
+
+  def make_move(game, guess) do
+    is_letter_used? = MapSet.member?(game.letters_used, guess)
+
+    accept_guess(game, guess, is_letter_used?)
+    |> Utils.return_with_tally()
+  end
+
+  @spec accept_guess(t, binary, boolean) :: t
+  def accept_guess(game, _guess, _letter_already_used = true) do
+    %{game | game_state: :letter_already_used}
+  end
+
+  def accept_guess(game, guess, _letter_already_used) do
+    %{game | letters_used: MapSet.put(game.letters_used, guess)}
   end
 end
