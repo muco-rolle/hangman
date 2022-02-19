@@ -49,7 +49,30 @@ defmodule Hangman.Impl.Game do
     %{game | game_state: :letter_already_used}
   end
 
-  def accept_guess(game, guess, _letter_already_used) do
-    %{game | letters_used: MapSet.put(game.letters_used, guess)}
+  def accept_guess(game, guess, _letter_not_used) do
+    game = %{game | letters_used: MapSet.put(game.letters_used, guess)}
+
+    # _good_guess? = Enum.member?(game.letters, guess)
+
+    good_guess? = Enum.member?(game.letters, guess)
+
+    score_guess(game, good_guess?)
+  end
+
+  @spec score_guess(t, boolean) :: t
+  def score_guess(game, _good_guess = true) do
+    won? = MapSet.subset?(MapSet.new(game.letters), game.letters_used)
+
+    case won? do
+      true -> %{game | game_state: :won}
+      _ -> %{game | game_state: :good_guess}
+    end
+  end
+
+  def score_guess(game, _bad_guess) do
+    case game.turns_left do
+      1 -> %{game | game_state: :lost}
+      _ -> game
+    end
   end
 end
