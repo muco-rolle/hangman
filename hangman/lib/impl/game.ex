@@ -71,8 +71,15 @@ defmodule Hangman.Impl.Game do
 
   def score_guess(game, _bad_guess) do
     case game.turns_left do
-      1 -> %{game | game_state: :lost}
-      _ -> game
+      1 ->
+        %{game | game_state: :lost}
+
+      _ ->
+        %{
+          game
+          | game_state: :bad_guess,
+            turns_left: game.turns_left - 1
+        }
     end
   end
 end

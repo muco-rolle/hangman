@@ -69,4 +69,17 @@ defmodule HangmanImpleGameTest do
     {game, tally} = Game.make_move(game, "m")
     assert tally.game_state == :good_guess
   end
+
+  test "we recognize a letter is not in the word" do
+    game = Game.new_game("wombat")
+
+    {game, tally} = Game.make_move(game, "x")
+    assert tally.game_state == :bad_guess
+
+    {game, tally} = Game.make_move(game, "w")
+    assert tally.game_state == :good_guess
+
+    {game, tally} = Game.make_move(game, "d")
+    assert tally.game_state == :bad_guess
+  end
 end
