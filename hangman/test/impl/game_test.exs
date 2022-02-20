@@ -63,23 +63,72 @@ defmodule HangmanImpleGameTest do
   test "we recognize a letter in the word" do
     game = Game.new_game("wombat")
 
-    {game, tally} = Game.make_move(game, "t")
+    {_game, tally} = Game.make_move(game, "t")
     assert tally.game_state == :good_guess
 
-    {game, tally} = Game.make_move(game, "m")
+    {_game, tally} = Game.make_move(game, "m")
     assert tally.game_state == :good_guess
   end
 
   test "we recognize a letter is not in the word" do
     game = Game.new_game("wombat")
 
-    {game, tally} = Game.make_move(game, "x")
+    {_game, tally} = Game.make_move(game, "x")
     assert tally.game_state == :bad_guess
 
-    {game, tally} = Game.make_move(game, "w")
+    {_game, tally} = Game.make_move(game, "w")
     assert tally.game_state == :good_guess
 
-    {game, tally} = Game.make_move(game, "d")
+    {_game, tally} = Game.make_move(game, "d")
     assert tally.game_state == :bad_guess
+  end
+
+  test "can handle a sequence of move" do
+    [
+      ["a", :bad_guess, 6, ["_", "_", "_", "_", "_"], MapSet.new(["a"])],
+      ["e", :good_guess, 6, ["_", "e", "_", "_", "_"], MapSet.new(["a", "e"])],
+      ["x", :bad_guess, 5, ["_", "e", "_", "_", "_"], MapSet.new(["a", "e", "x"])]
+    ]
+    |> test_sequence_of_moves
+  end
+
+  test "can handle a winning game" do
+    [
+      ["a", :bad_guess, 6, ["_", "_", "_", "_", "_"], MapSet.new(["a"])],
+      ["a", :letter_already_used, 6, ["_", "_", "_", "_", "_"], MapSet.new(["a"])],
+      ["e", :good_guess, 6, ["_", "e", "_", "_", "_"], MapSet.new(["a", "e"])],
+      ["x", :bad_guess, 5, ["_", "e", "_", "_", "_"], MapSet.new(["a", "e", "x"])],
+      ["l", :good_guess, 5, ["_", "e", "l", "l", "_"], MapSet.new(["a", "e", "x", "l"])],
+      ["o", :good_guess, 5, ["_", "e", "l", "l", "o"], MapSet.new(["a", "e", "x", "l", "o"])],
+      [
+        "y",
+        :bad_guess,
+        4,
+        ["_", "e", "l", "l", "o"],
+        MapSet.new(["a", "e", "x", "l", "o", "y"])
+      ],
+      ["h", :won, 4, ["h", "e", "l", "l", "o"], MapSet.new(["a", "e", "x", "l", "o", "y", "h"])]
+    ]
+    |> test_sequence_of_moves
+  end
+
+  #
+  # Helper test functions
+  ###########################################
+  defp test_sequence_of_moves(script) do
+    game = Game.new_game("hello")
+
+    script |> Enum.reduce(game, &test_one_move/2)
+  end
+
+  defp test_one_move([guess, state, turns, letters, letters_used], game) do
+    {game, tally} = Game.make_move(game, guess)
+
+    assert tally.game_state == state
+    assert tally.turns_left == turns
+    assert tally.letters == letters
+    assert MapSet.equal?(tally.letters_used, letters_used)
+
+    game
   end
 end
