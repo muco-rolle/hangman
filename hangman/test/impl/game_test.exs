@@ -112,6 +112,33 @@ defmodule HangmanImpleGameTest do
     |> test_sequence_of_moves
   end
 
+  test "can handle a failing game" do
+    [
+      ["a", :bad_guess, 6, ["_", "_", "_", "_", "_"], MapSet.new(["a"])],
+      ["h", :good_guess, 6, ["h", "_", "_", "_", "_"], MapSet.new(["a", "h"])],
+      ["h", :letter_already_used, 6, ["h", "_", "_", "_", "_"], MapSet.new(["a", "h"])],
+      ["t", :bad_guess, 5, ["h", "_", "_", "_", "_"], MapSet.new(["a", "h", "t"])],
+      ["s", :bad_guess, 4, ["h", "_", "_", "_", "_"], MapSet.new(["a", "h", "t", "s"])],
+      ["m", :bad_guess, 3, ["h", "_", "_", "_", "_"], MapSet.new(["a", "h", "t", "s", "m"])],
+      ["n", :bad_guess, 2, ["h", "_", "_", "_", "_"], MapSet.new(["a", "h", "t", "s", "m", "n"])],
+      [
+        "b",
+        :bad_guess,
+        1,
+        ["h", "_", "_", "_", "_"],
+        MapSet.new(["a", "h", "t", "s", "m", "n", "b"])
+      ],
+      [
+        "g",
+        :lost,
+        0,
+        ["h", "_", "_", "_", "_"],
+        MapSet.new(["a", "h", "t", "s", "m", "n", "b", "g"])
+      ]
+    ]
+    |> test_sequence_of_moves
+  end
+
   #
   # Helper test functions
   ###########################################

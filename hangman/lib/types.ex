@@ -3,6 +3,7 @@ defmodule Hangman.Types do
   Hangman Types
   """
 
+  @type game :: Hangman.Impl.Game.t()
   @type state :: :initializing | :won | :lost | :good_guess | :bad_guess | :letters_already_used
   @type tally :: %{
           turns_left: integer,
