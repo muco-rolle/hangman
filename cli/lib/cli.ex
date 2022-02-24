@@ -3,16 +3,8 @@ defmodule Cli do
   Documentation for `Cli`.
   """
 
-  @doc """
-  Hello world.
+  alias Cli.Impl.Player
 
-  ## Examples
-
-      iex> Cli.hello()
-      :world
-
-  """
-  def hello do
-    :world
-  end
+  @spec start :: atom()
+  defdelegate start, to: Player
 end
