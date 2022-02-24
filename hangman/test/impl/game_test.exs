@@ -132,7 +132,7 @@ defmodule HangmanImpleGameTest do
         "g",
         :lost,
         0,
-        ["h", "_", "_", "_", "_"],
+        ["h", "e", "l", "l", "o"],
         MapSet.new(["a", "h", "t", "s", "m", "n", "b", "g"])
       ]
     ]

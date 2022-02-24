@@ -93,6 +93,7 @@ defmodule Hangman.Impl.Game do
   end
 
   @spec reveal_guessed_letters(Game.t()) :: list(binary())
+  def reveal_guessed_letters(game = %{game_state: :lost}), do: game.letters
 
   def reveal_guessed_letters(game) do
     is_letter_used? = fn letters_used, letter -> MapSet.member?(letters_used, letter) end
