@@ -3,17 +3,17 @@ defmodule Dictionary.Impl.WordList do
   Documentation for `WordList`
   """
 
-  @opaque words :: list(binary)
+  @type t :: list(String.t())
 
-  @spec start :: words()
-  def start, do: get_words()
+  @spec word_list :: t
+  def word_list, do: get_words()
 
-  @spec random_word(words) :: binary
+  @spec random_word(t) :: binary
   def random_word(words) do
     words |> Enum.random()
   end
 
-  @spec get_words() :: words()
+  @spec get_words() :: t
   defp get_words() do
     File.cwd!() |> Path.join("assets/words.txt") |> File.read!() |> String.split()
   end
