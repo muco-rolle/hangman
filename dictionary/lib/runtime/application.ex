@@ -3,11 +3,16 @@ defmodule Dictionary.Runtime.Application do
   Documentation for `Application`
   """
 
-  use Application
-
-  alias Dictionary.Runtime.Server
-
   def start(_type, _args) do
-    Server.start_link()
+    children = [
+      {Dictionary.Runtime.Server, []}
+    ]
+
+    options = [
+      name: Dictionary.Runtime.Supervisor,
+      strategy: :one_for_one
+    ]
+
+    Supervisor.start_link(children, options)
   end
 end
