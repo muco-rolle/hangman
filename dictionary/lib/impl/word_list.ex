@@ -15,6 +15,10 @@ defmodule Dictionary.Impl.WordList do
 
   @spec get_words() :: t
   defp get_words() do
-    File.cwd!() |> Path.join("assets/words.txt") |> File.read!() |> String.split()
+    # File.cwd!() |> Path.join("assets/words.txt") |> File.read!() |> String.split()
+    "../../assets/words.txt"
+    |> Path.expand(__DIR__)
+    |> File.read!()
+    |> String.split(~r/\n/, trim: true)
   end
 end
